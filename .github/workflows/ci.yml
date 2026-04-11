@@ -1,4 +1,4 @@
-name: Windows Build
+name: Windows CI
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Install Nim
@@ -20,15 +20,13 @@ jobs:
       - name: Show Nim version
         run: nim -v
 
-      - name: Install dependencies
-        run: nimble install -y
+      - name: Build release binary
+        run: nimble build -d:release
 
-      - name: Build (release)
-        run: nimble build -d:release -y
-
-      - name: Upload EXE
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: fastfind-windows
           path: |
-            **/*.exe
+            *.exe
+            dist/*.exe
