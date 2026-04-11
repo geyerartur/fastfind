@@ -27,7 +27,7 @@ jobs:
         run: nim check src/main.nim
 
       - name: Run Nimble tests
-        run: nimble test
+        run: nim c -r tests/test_all.nim
     
       - name: Check formatting
         run: nimpretty --check src/
