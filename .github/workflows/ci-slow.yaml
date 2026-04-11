@@ -20,13 +20,26 @@ jobs:
       - name: Full build (release mode)
         run: nim c -d:release src/main.nim
 
-      - name: Run full test suite
+      - name: Run tests
+        shell: pwsh
         run: |
-            if exist tests\*.nim (
-            nim c -r tests/test_all.nim
-            ) else (
-            echo "No tests found, skipping"
-            )
+            if (Test-Path "tests\*.nim") {
+            nim c -r tests\test_all.nim
+            } else {
+            Write-Host "No tests found, skipping"
+            }
 
       - name: Static analysis
         run: nim check src/*.nim
+
+      - name: Linting
+        run: nim lint src/*.nim
+
+      - name: Full release build
+        run: nim c -d:release --mm:orc src/main.nim
+
+      - name: Static analysis
+        run: nim check src/*.nim
+
+      - name: Rebuild tests in release mode
+        run: nim c -d:release -r tests/test_all.nim

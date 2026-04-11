@@ -26,9 +26,10 @@ jobs:
         run: nim c --mm:orc src/main.nim
 
       - name: Run tests
+        shell: pwsh
         run: |
-          if exist tests\*.nim (
-            nim c -r tests/test_all.nim
-          ) else (
-            echo "No tests found, skipping"
-          )
+            if (Test-Path "tests\*.nim") {
+            nim c -r tests\test_all.nim
+            } else {
+            Write-Host "No tests found, skipping"
+            }
