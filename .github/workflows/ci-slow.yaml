@@ -21,7 +21,7 @@ jobs:
         run: nim c src/main.nim
 
       - name: Compile (release build)
-        run: nim c --warnings:on --hints:on src/main.nim -d:release --mm:orc src/main.nim
+        run: nim c --warnings:on --hints:on -d:release --mm:orc src/main.nim
 
       - name: Static analysis (nim check)
         run: nim check src/main.nim
