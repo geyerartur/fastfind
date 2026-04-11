@@ -1,3 +1,25 @@
 nimcache/
 nimblecache/
 htmldocs/
+
+# Compiled files
+*.exe
+*.dll
+*.so
+*.dylib
+nimcache/
+/nimblecache/
+
+dist/
+
+# Build artifacts
+fastfind.exe
+fastfind
+
+# Editor garbage
+*.swp
+*.bak
+.DS_Store
+
+# Nimble local stuff
+/.nimble/
