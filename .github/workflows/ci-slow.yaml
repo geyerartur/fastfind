@@ -1,0 +1,32 @@
+name: CI (Slow / Extended)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  extended:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nim
+        uses: jiro4989/setup-nim-action@v2
+        with:
+          nim-version: stable
+
+      - name: Full build (release mode)
+        run: nim c -d:release src/main.nim
+
+      - name: Run full test suite
+        run: |
+            if exist tests\*.nim (
+            nim c -r tests/test_all.nim
+            ) else (
+            echo "No tests found, skipping"
+            )
+
+      - name: Static analysis
+        run: nim check src/*.nim

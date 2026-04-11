@@ -3,24 +3,30 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
-  release:
+  build-release:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Nim
-        uses: jiro4989/setup-nim-action@v1
+        uses: jiro4989/setup-nim-action@v2
         with:
           nim-version: stable
 
-      - name: Build release
-        run: nimble build -d:release
+      - name: Build release binary
+        run: nim c -d:release --app:console -o:fastfind.exe src/main.nim
 
-      - name: Upload release binary
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastfind-windows
+          path: fastfind.exe
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.exe
+          files: fastfind.exe
