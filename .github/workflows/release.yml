@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nim
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: stable
+
+      - name: Build release
+        run: nimble build -d:release
+
+      - name: Upload release binary
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.exe
