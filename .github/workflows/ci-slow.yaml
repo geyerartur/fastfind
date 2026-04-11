@@ -1,4 +1,4 @@
-name: CI (Slow / Extended)
+name: CI (Slow)
 
 on:
   push:
@@ -17,29 +17,26 @@ jobs:
         with:
           nim-version: stable
 
-      - name: Full build (release mode)
-        run: nim c -d:release src/main.nim
+      - name: Compile (debug build)
+        run: nim c src/main.nim
+
+      - name: Compile (release build)
+        run: nim c --warnings:on --hints:on src/main.nim -d:release --mm:orc src/main.nim
+
+      - name: Static analysis (nim check)
+        run: nim check src/main.nim
+
+      - name: Run Nimble tests
+        run: nimble test
+    
+      - name: Check formatting
+        run: nimpretty --check src/
 
       - name: Run tests
         shell: pwsh
         run: |
-            if (Test-Path "tests\*.nim") {
-            nim c -r tests\test_all.nim
-            } else {
-            Write-Host "No tests found, skipping"
-            }
-
-      - name: Static analysis
-        run: nim check src/*.nim
-
-      - name: Linting
-        run: nim lint src/*.nim
-
-      - name: Full release build
-        run: nim c -d:release --mm:orc src/main.nim
-
-      - name: Static analysis
-        run: nim check src/*.nim
-
-      - name: Rebuild tests in release mode
-        run: nim c -d:release -r tests/test_all.nim
+          if (Test-Path "tests/test_all.nim") {
+            nim c -r tests/test_all.nim
+          } else {
+            Write-Host "No test_all.nim found, skipping"
+          }
