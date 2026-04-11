@@ -1,38 +1,34 @@
-name: CI
+name: Windows Build
 
 on:
   push:
-    branches: [ main, master ]
   pull_request:
-    branches: [ main, master ]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        nim-version: ['stable', '2.2.6']
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup Nim
-      uses: jiro4989/setup-nim-action@v2
-      with:
-        nim-version: ${{ matrix.nim-version }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install Nim
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: 'stable'
 
-    - name: Cache Nimble packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nimble
-        key: ${{ runner.os }}-nimble-${{ hashFiles('fastfind.nimble') }}
-        restore-keys: ${{ runner.os }}-nimble-
+      - name: Show Nim version
+        run: nim -v
 
-    - name: Build fastfind
-      run: nimble build -Y
+      - name: Install dependencies
+        run: nimble install -y
 
-    - name: Run tests
-      run: nimble test -Y
+      - name: Build (release)
+        run: nimble build -d:release -y
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastfind-windows
+          path: |
+            **/*.exe
