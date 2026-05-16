@@ -23,13 +23,13 @@ jobs:
           key: ${{ runner.os }}-nimble-${{ hashFiles('**/*.nimble') }}
 
       - name: Compile (fast fail)
-        run: nim c --mm:orc src/main.nim
+        run: nim c --mm:orc src/fastfind.nim
 
       - name: Run tests
         shell: pwsh
         run: |
-            if (Test-Path "tests\*.nim") {
-            nim c -r tests\test_all.nim
-            } else {
-            Write-Host "No tests found, skipping"
-            }
+          if (Test-Path "tests\*.nim") {
+          nim c -r tests\test_all.nim
+          } else {
+          Write-Host "No tests found, skipping"
+          }
