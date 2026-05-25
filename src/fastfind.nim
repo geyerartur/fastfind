@@ -1,4 +1,4 @@
-import crawler, indexer, std/[os, strutils]
+import crawler, indexer, searcher, std/[os, strutils]
 
 type
   Command = enum
@@ -50,7 +50,8 @@ proc main() =
     else:
       let query = commandLineParams()[1]
       echo "Searching for: ", query
-      # TODO: call search logic
+      let results = searcher.search(query)
+      echo "Found ", results.len, " matches"
 
 when isMainModule:
   main()

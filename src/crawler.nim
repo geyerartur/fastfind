@@ -1,15 +1,13 @@
-import std/os
-import std/times
+import std/[os, times]
 
-type
-  File* = object
-    path*: string
-    name*: string
-    kind*: PathComponent
-    extension*: string
-    size*: int64
-    creationTime*: Time
-    lastModified*: Time
+type File* = object
+  path*: string
+  name*: string
+  kind*: PathComponent
+  extension*: string
+  size*: int64
+  creationTime*: Time
+  lastModified*: Time
 
 proc getKind(path: string): PathComponent =
   if dirExists(path):
@@ -22,7 +20,7 @@ proc toFile(path: string): File =
   let sf = splitFile(path)
 
   File(
-    path: path,
+    path: path,   
     name: sp.tail,
     kind: getKind(path),
     extension: sf.ext,

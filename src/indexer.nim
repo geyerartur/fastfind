@@ -8,8 +8,11 @@ proc buildIndex*(files: seq[cr.File]): JsonNode =
     var fileNode = newJObject()
     fileNode["path"] = %file.path
     fileNode["name"] = %file.name
+    fileNode["kind"] = %file.kind
+    fileNode["extension"] = %file.extension
     fileNode["size"] = %file.size
     fileNode["modified"] = %($file.lastModified)
+    fileNode["created"] = %($file.creationTime)
 
     index.add(fileNode)
 
